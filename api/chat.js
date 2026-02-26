@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         'X-Title': 'Pabbly Copilot'
       },
       body: JSON.stringify({
-       model: 'deepseek/deepseek-chat-v3-0324:free',
+       model: 'openrouter/auto',
         messages: [
           { role: 'system', content: system },
           ...messages
