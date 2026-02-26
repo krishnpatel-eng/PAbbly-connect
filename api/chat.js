@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         'X-Title': 'Pabbly Copilot'
       },
       body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct:free',
+       model: 'deepseek/deepseek-chat-v3-0324:free',
         messages: [
           { role: 'system', content: system },
           ...messages
