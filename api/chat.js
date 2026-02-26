@@ -6,33 +6,32 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   try {
     const { messages, system } = req.body;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': 'https://pabbly-copilot.vercel.app',
-        'X-Title': 'Pabbly Copilot'
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-       model: 'openrouter/auto',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: system },
           ...messages
         ],
         temperature: 0.3,
-        max_tokens: 2048
+        max_tokens: 2048,
+        response_format: { type: 'json_object' }
       }),
     });
 
     const data = await response.json();
-    if (!response.ok) return res.status(response.status).json({ error: data.error?.message || 'OpenRouter error' });
+    if (!response.ok) return res.status(response.status).json({ error: data.error?.message || 'Groq error' });
 
     const text = data.choices?.[0]?.message?.content || '';
     return res.status(200).json({ text });
